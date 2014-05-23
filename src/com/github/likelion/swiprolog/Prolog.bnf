@@ -1,0 +1,20 @@
+{
+  parserClass="com.github.likelion.swiprolog.parser.PrologParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Prolog"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.github.likelion.swiprolog.psi"
+  psiImplPackage="com.github.likelion.swiprolog.psi.impl"
+
+  elementTypeHolderClass="com.github.likelion.swiprolog.psi.PrologTypes"
+  elementTypeClass="com.github.likelion.swiprolog.psi.PrologElementType"
+  tokenTypeClass="com.github.likelion.swiprolog.psi.PrologTokenType"
+}
+
+prologFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY

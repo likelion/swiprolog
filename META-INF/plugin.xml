@@ -1,0 +1,45 @@
+<idea-plugin version="2">
+  <id>com.github.likelion.swiprolog</id>
+  <name>SWI Prolog support</name>
+  <version>1.0</version>
+  <vendor email="likelion@gmail.com" url="http://github.com/likelion">Leonid Mokrushin</vendor>
+
+  <description><![CDATA[
+      This plugin provides an editor for SWI Prolog files.<br>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Initial version.<br>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="131"/>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+    <fileTypeFactory implementation="com.github.likelion.swiprolog.PrologFileTypeFactory"/>
+    <lang.parserDefinition language="prolog" implementationClass="com.github.likelion.swiprolog.PrologParserDefinition"/>
+    <lang.syntaxHighlighterFactory key="prolog" implementationClass="com.github.likelion.swiprolog.PrologSyntaxHighlighterFactory"/>
+    <colorSettingsPage implementation="com.github.likelion.swiprolog.PrologColorSettingsPage"/>
+  </extensions>
+
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+  </project-components>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>

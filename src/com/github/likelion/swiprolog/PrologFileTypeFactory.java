@@ -1,0 +1,16 @@
+package com.github.likelion.swiprolog;
+
+import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
+import org.jetbrains.annotations.NotNull;
+
+public class PrologFileTypeFactory extends FileTypeFactory {
+
+    @Override
+    public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
+        fileTypeConsumer.consume(PrologFileType.INSTANCE, "pl");
+        fileTypeConsumer.consume(PrologFileType.INSTANCE, "pro");
+        fileTypeConsumer.consume(PrologFileType.INSTANCE, "p");
+    }
+
+}
