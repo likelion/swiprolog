@@ -30,7 +30,7 @@ public class PrologParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public Lexer createLexer(Project project) {
-        return new FlexAdapter(new PrologLexer((Reader) null));
+        return new FlexAdapter(new _PrologLexer((Reader) null));
     }
 
     @NotNull

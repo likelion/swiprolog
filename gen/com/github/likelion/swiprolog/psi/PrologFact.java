@@ -5,6 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrologProperty extends PsiElement {
+public interface PrologFact extends PsiElement {
+
+  @NotNull
+  PrologPredicate getPredicate();
 
 }

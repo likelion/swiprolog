@@ -11,15 +11,21 @@ import static com.github.likelion.swiprolog.psi.PrologTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.likelion.swiprolog.psi.*;
 
-public class PrologPropertyImpl extends ASTWrapperPsiElement implements PrologProperty {
+public class PrologPredicateImpl extends ASTWrapperPsiElement implements PrologPredicate {
 
-  public PrologPropertyImpl(ASTNode node) {
+  public PrologPredicateImpl(ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof PrologVisitor) ((PrologVisitor)visitor).visitProperty(this);
+    if (visitor instanceof PrologVisitor) ((PrologVisitor)visitor).visitPredicate(this);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PrologArglist getArglist() {
+    return findChildByClass(PrologArglist.class);
   }
 
 }
