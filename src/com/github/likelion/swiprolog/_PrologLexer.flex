@@ -22,12 +22,12 @@ EOL="\r"|"\n"|"\r\n"
 LINE_WS=[\ \t\f]
 WHITE_SPACE=({LINE_WS}|{EOL})+
 
-COMMENT=(%[^\r\n]*)|("/"\*([^\*]|\*[^/]|\n)*\*"/")
-FUNCTION=abort|min
-IDENTIFIER=[a-z][a-zA-Z0-9_]*
+OPERATOR==(\.\.|\\=|:=|=)?|(\\==?)|\+|-|\*|>(>|=)?|<(<|=)?|(is)
+ATOM=([a-z][a-zA-Z0-9_]*)|('([^'\\]|\\.)*')
 VAR=[A-Z_][a-zA-Z0-9_]*
-STRING=('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\'|\\)*\")
-NUMBER=0|[1-9][0-9]*(\.[0-9]+)?(E(\+|\-)?[0-9]+)?
+NUMBER=(-)?(0((x[0-9a-fA-F]+)|(b[10]+)|(o[0-7]+))?|[1-9][0-9]*(\.[0-9]+)?(E(\+|\-)?[0-9]+)?)
+STRING='([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\'|\\)*\"
+COMMENT=(%[^\r\n]*)|("/"\*([^\*]|\*[^/]|\n)*\*"/")
 
 %%
 <YYINITIAL> {
@@ -38,21 +38,29 @@ NUMBER=0|[1-9][0-9]*(\.[0-9]+)?(E(\+|\-)?[0-9]+)?
   ","                { return COMMA; }
   "("                { return LPAREN; }
   ")"                { return RPAREN; }
-  "true"             { return TRUE; }
-  "false"            { return FALSE; }
-  "fail"             { return FAIL; }
   "!"                { return CUT; }
   "["                { return LBRACKET; }
   "]"                { return RBRACKET; }
   ":"                { return COLON; }
+  ";"                { return SEMICOLON; }
   "|"                { return PIPE; }
+  "?-"               { return PROMPT; }
+  "^"                { return HAT; }
+  "->"               { return IFTHEN; }
+  "*->"              { return SOFTCUT; }
+  "\\+"              { return NOT; }
+  "-->"              { return DCG; }
+  "{"                { return LBRACE; }
+  "}"                { return RBRACE; }
+  "/"                { return SLASH; }
+  "once"             { return ONCE; }
 
-  {COMMENT}          { return COMMENT; }
-  {FUNCTION}         { return FUNCTION; }
-  {IDENTIFIER}       { return IDENTIFIER; }
+  {OPERATOR}         { return OPERATOR; }
+  {ATOM}             { return ATOM; }
   {VAR}              { return VAR; }
-  {STRING}           { return STRING; }
   {NUMBER}           { return NUMBER; }
+  {STRING}           { return STRING; }
+  {COMMENT}          { return COMMENT; }
 
   [^] { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

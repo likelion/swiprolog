@@ -59,26 +59,26 @@ public class PrologSyntaxHighlighter extends SyntaxHighlighterBase {
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         if (tokenType.equals(PrologTypes.DOT) || tokenType.equals(PrologTypes.IMPLIES) || tokenType.equals(PrologTypes.COMMA)) {
             return SPECIAL_KEYS;
+            /*
         } else if (tokenType.equals(PrologTypes.FUNCTION) || tokenType.equals(PrologTypes.PREDICATE)) {
             return FUNCTION_KEYS;
-            /*
         } else if (tokenType.equals(PrologTypes.KEYWORD)) {
             return KEYWORD_KEYS;
+        } else if (tokenType.equals(PrologTypes.IDENTIFIER)) {
+            return IDENTIFIER_KEYS;
+            */
         } else if (tokenType.equals(PrologTypes.OPERATOR)) {
             return OPERATOR_KEYS;
-            */
         } else if (tokenType.equals(PrologTypes.NUMBER)) {
             return NUMBER_KEYS;
         } else if (tokenType.equals(PrologTypes.STRING)) {
             return STRING_KEYS;
-        } else if (tokenType.equals(PrologTypes.TRUE) || tokenType.equals(PrologTypes.FALSE) ||
-                   tokenType.equals(PrologTypes.FAIL) || tokenType.equals(PrologTypes.CUT)) {
+        } else if (tokenType.equals(PrologTypes.CUT)) {
             return BOOLEAN_KEYS;
         } else if (tokenType.equals(PrologTypes.LPAREN) || tokenType.equals(PrologTypes.RPAREN) ||
-                   tokenType.equals(PrologTypes.RBRACKET) || tokenType.equals(PrologTypes.RBRACKET)) {
+                   tokenType.equals(PrologTypes.LBRACKET) || tokenType.equals(PrologTypes.RBRACKET) ||
+                   tokenType.equals(PrologTypes.LBRACE) || tokenType.equals(PrologTypes.RBRACE)) {
             return SEPARATOR_KEYS;
-        } else if (tokenType.equals(PrologTypes.IDENTIFIER)) {
-            return IDENTIFIER_KEYS;
         } else if (tokenType.equals(PrologTypes.VAR)) {
             return VAR_KEYS;
         } else if (tokenType.equals(PrologTypes.COMMENT)) {

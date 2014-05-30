@@ -8,73 +8,53 @@ import com.github.likelion.swiprolog.psi.impl.*;
 
 public interface PrologTypes {
 
-  IElementType ARG = new PrologElementType("ARG");
-  IElementType ARGLIST = new PrologElementType("ARGLIST");
-  IElementType BODYPREDICATE = new PrologElementType("BODYPREDICATE");
   IElementType CLAUSE = new PrologElementType("CLAUSE");
-  IElementType ELEMENT = new PrologElementType("ELEMENT");
-  IElementType ELEMENTLIST = new PrologElementType("ELEMENTLIST");
-  IElementType FACT = new PrologElementType("FACT");
-  IElementType INSTRUCTION = new PrologElementType("INSTRUCTION");
-  IElementType LIST = new PrologElementType("LIST");
-  IElementType LITERAL = new PrologElementType("LITERAL");
-  IElementType PREDICATE = new PrologElementType("PREDICATE");
+  IElementType DIRECTIVE = new PrologElementType("DIRECTIVE");
+  IElementType QUERY = new PrologElementType("QUERY");
+  IElementType TERM = new PrologElementType("TERM");
 
+  IElementType ATOM = new PrologTokenType("ATOM");
   IElementType COLON = new PrologTokenType(":");
   IElementType COMMA = new PrologTokenType(",");
   IElementType COMMENT = new PrologTokenType("COMMENT");
   IElementType CUT = new PrologTokenType("!");
+  IElementType DCG = new PrologTokenType("-->");
   IElementType DOT = new PrologTokenType(".");
-  IElementType FAIL = new PrologTokenType("fail");
-  IElementType FALSE = new PrologTokenType("false");
-  IElementType FUNCTION = new PrologTokenType("FUNCTION");
-  IElementType IDENTIFIER = new PrologTokenType("IDENTIFIER");
+  IElementType HAT = new PrologTokenType("^");
+  IElementType IFTHEN = new PrologTokenType("->");
   IElementType IMPLIES = new PrologTokenType(":-");
+  IElementType LBRACE = new PrologTokenType("{");
   IElementType LBRACKET = new PrologTokenType("[");
   IElementType LPAREN = new PrologTokenType("(");
+  IElementType NOT = new PrologTokenType("\\+");
   IElementType NUMBER = new PrologTokenType("NUMBER");
+  IElementType ONCE = new PrologTokenType("once");
+  IElementType OPERATOR = new PrologTokenType("OPERATOR");
   IElementType PIPE = new PrologTokenType("|");
+  IElementType PROMPT = new PrologTokenType("?-");
+  IElementType RBRACE = new PrologTokenType("}");
   IElementType RBRACKET = new PrologTokenType("]");
   IElementType RPAREN = new PrologTokenType(")");
+  IElementType SEMICOLON = new PrologTokenType(";");
+  IElementType SLASH = new PrologTokenType("/");
+  IElementType SOFTCUT = new PrologTokenType("*->");
   IElementType STRING = new PrologTokenType("STRING");
-  IElementType TRUE = new PrologTokenType("true");
   IElementType VAR = new PrologTokenType("VAR");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-       if (type == ARG) {
-        return new PrologArgImpl(node);
-      }
-      else if (type == ARGLIST) {
-        return new PrologArglistImpl(node);
-      }
-      else if (type == BODYPREDICATE) {
-        return new PrologBodypredicateImpl(node);
-      }
-      else if (type == CLAUSE) {
+       if (type == CLAUSE) {
         return new PrologClauseImpl(node);
       }
-      else if (type == ELEMENT) {
-        return new PrologElementImpl(node);
+      else if (type == DIRECTIVE) {
+        return new PrologDirectiveImpl(node);
       }
-      else if (type == ELEMENTLIST) {
-        return new PrologElementlistImpl(node);
+      else if (type == QUERY) {
+        return new PrologQueryImpl(node);
       }
-      else if (type == FACT) {
-        return new PrologFactImpl(node);
-      }
-      else if (type == INSTRUCTION) {
-        return new PrologInstructionImpl(node);
-      }
-      else if (type == LIST) {
-        return new PrologListImpl(node);
-      }
-      else if (type == LITERAL) {
-        return new PrologLiteralImpl(node);
-      }
-      else if (type == PREDICATE) {
-        return new PrologPredicateImpl(node);
+      else if (type == TERM) {
+        return new PrologTermImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

@@ -1,7 +1,6 @@
 {
   parserClass="com.github.likelion.swiprolog.parser.PrologParser"
   parserUtilClass="com.github.likelion.swiprolog.parser.PrologParserUtil"
-  parserUtilClass="com.github.likelion.swiprolog.parser.PrologParserUtil"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
@@ -9,7 +8,7 @@
   psiImplClassSuffix="Impl"
   psiPackage="com.github.likelion.swiprolog.psi"
   psiImplPackage="com.github.likelion.swiprolog.psi.impl"
-  psiImplUtilClass="com.github.likelion.swiprolog.psi.impl.PrologPsiImplUtil"
+  //psiImplUtilClass="com.github.likelion.swiprolog.psi.impl.PrologPsiImplUtil"
 
   elementTypeHolderClass="com.github.likelion.swiprolog.psi.PrologTypes"
   elementTypeClass="com.github.likelion.swiprolog.psi.PrologElementType"
@@ -21,55 +20,170 @@
     COMMA = ","
     LPAREN = "("
     RPAREN = ")"
-    TRUE = "true"
-    FALSE = "false"
-    FAIL = "fail"
     CUT = "!"
     LBRACKET = "["
     RBRACKET = "]"
     COLON = ":"
+    SEMICOLON = ";"
     PIPE = "|"
+    PROMPT = "?-"
+    HAT = "^"
+    IFTHEN = "->"
+    SOFTCUT = "*->"
+    NOT = "\+"
+    DCG = "-->"
+    LBRACE = "{"
+    RBRACE = "}"
+    SLASH = "/"
 
-    COMMENT = 'regexp:(%[^\r\n]*)|(/\*([^\*]|\*[^/]|\n)*\*/)'
-    FUNCTION = 'regexp:abort|min'
-    IDENTIFIER = 'regexp:[a-z][a-zA-Z0-9_]*'
+/*
+    UNIFY = "="
+    NOTUNIFY = "\="
+    PLUS = "+"
+    MINUS = "-"
+    MULTIPLY = "*"
+    GT = ">"
+    LT = "<"
+    GTE = ">="
+    LTE = "<="
+    RSHIFT = ">>"
+    LSHIFT = "<<"
+    IS = "is"
+    UNIV = "=.."
+    NEQNUM = "=\="
+    EQNUM = "=:="
+    EQUIV = "=="
+    NOTEQUIV = "\=="
+*/
+
+    OPERATOR = "regexp:=(\.\.|\\=|:=|=)?|(\\==?)|\+|-|\*|>(>|=)?|<(<|=)?|(is)"
+
+    ONCE = "once"
+
+    ATOM = "regexp:([a-z][a-zA-Z0-9_]*)|('([^'\\]|\\.)*')"
     VAR = 'regexp:[A-Z_][a-zA-Z0-9_]*'
-    STRING = "regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\\'|\\)*\")"
-    NUMBER = 'regexp:0|[1-9][0-9]*(\.[0-9]+)?(E(\+|\-)?[0-9]+)?'
+    NUMBER = 'regexp:(-)?(0((x[0-9a-fA-F]+)|(b[10]+)|(o[0-7]+))?|[1-9][0-9]*(\.[0-9]+)?(E(\+|\-)?[0-9]+)?)'
+    STRING = "regexp:'([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\\'|\\)*\""
+    COMMENT = 'regexp:(%[^\r\n]*)|(/\*([^\*]|\*[^/]|\n)*\*/)'
 
   ]
 
 }
 
-prologFile ::= statement_*
+prologFile ::= sentence*
 
-private statement_ ::= (fact|clause|instruction|COMMENT)
+private sentence ::= ( list | clause | directive | query ) DOT
 
-fact ::= predicate DOT
+clause ::= head [ IMPLIES body ]
+private head ::= term [ ( COMMA terminal )* DCG grammarbody !(IMPLIES) ]
 
-clause ::= predicate IMPLIES bodypredicate ( COMMA bodypredicate )* DOT
+directive ::= IMPLIES
+       ( ( "multifile" | "dynamic" ) predspec ( COMMA predspec )*
+       | body
+       )
 
-instruction ::= IMPLIES bodypredicate DOT
+private predspec ::= [ ATOM COLON ] ATOM SLASH [SLASH] NUMBER
 
-bodypredicate ::= predicate | TRUE | FALSE | FAIL | CUT
+query ::= PROMPT body
 
-predicate ::= /*FUNCTION*/ [ IDENTIFIER COLON ] IDENTIFIER [ LPAREN arglist RPAREN ]
+private body ::= body2
+               | NOT body
+               | ONCE LPAREN body RPAREN
+               | LPAREN body RPAREN [ COMMA body ]
+private body2 ::= body3 [ ( IFTHEN | SOFTCUT ) body [ disj body ] ]
+private body3 ::= body4 [ COMMA body ]
+private body4 ::= body5 [ disj body ]
+private body5 ::= body6 [ HAT body ]
+private body6 ::= term [ OPERATOR term ]
 
-arglist ::= arg ( COMMA arg )*
+private disj ::= SEMICOLON | PIPE
 
-arg ::= predicate | VAR | literal | list
+private terminal ::= list | STRING
 
-literal ::= STRING | NUMBER
+private grammarbody ::= grammarbody2
+                      | LBRACE body RBRACE
+                      | NOT grammarbody
+                      | ONCE LPAREN grammarbody RPAREN
+                      | LPAREN grammarbody RPAREN [ COMMA grammarbody ]
+private grammarbody2 ::= grammarbody3 [ ( IFTHEN | SOFTCUT ) grammarbody [ disj grammarbody ] ]
+private grammarbody3 ::= grammarbody4 [ COMMA grammarbody ]
+private grammarbody4 ::= grammarbody5 [ disj grammarbody ]
+private grammarbody5 ::= term [ HAT grammarbody ]
 
-list ::= LBRACKET [ elementlist ] RBRACKET
+term ::= predicatespec
+       | LPAREN term RPAREN
+       | LBRACE term RBRACE
+       | list
+       | STRING
+       | NUMBER
+       | VAR
+       | CUT
 
-elementlist ::= element ( ( PIPE elementlist ) | ( COMMA element )* )
+private predicatespec ::= predicate [ SLASH NUMBER ]
+private predicate ::= modular [ LPAREN arglist RPAREN !(SLASH) ]
+private modular ::= [ ATOM COLON ] ATOM
 
-element ::= predicate | VAR | literal
+private list ::= LBRACKET [ listexpr ] RBRACKET
+private listexpr ::= term [ ( COMMA listexpr ) | ( PIPE term ) ]
+
+private arglist ::= arglist2 ( COMMA term )*
+private arglist2 ::= arglist3 [ ( SLASH ATOM )* !(COMMA) ] // filepath
+private arglist3 ::= (DOT !(COMMA)) | term // current dir
 
 //private s ::= KEYWORD|LIST|OPERATOR|BOOLEAN|SEPARATOR|VAR|IDENTIFIER|NUMBER|WHITE_SPACE|STRING
 /*
 OPERATOR = "?" | "/" | "*" | "-" | "+" | "@" | "#" | "$" | "%" | "^" | "\\"
 BOOLEAN = "<" | ">" | "=" | "," | ";" | "&" | "~" | "|"
-SEPARATOR =  "{" | "}"
 */
+
+/*
+
+:-    fx  1200
+:-   xfx  1200
+?-    fx  1200
+;    xfy  1100
+->   xfy  1050  if
+,    xfy  1000
+not   fy   900
+\+    fy   900  not provable
+=    xfx   700
+\=   xfx   700
+==   xfx   700
+\==  xfx   700
+@>   xfx   700
+@<   xfx   700
+@=<  xfx   700
+@>=  xfx   700
+=:=  xfx   700  equal
+=\=  xfx   700  different
+>    xfx   700  greater
+<    xfx   700  smaller
+>=   xfx   700  ge
+<=   xfx   700  se
+is   xfx   700
+=..  xfx   700
++    yfx   500
+-    yfx   500
+/\   yfx   500
+\/   yfx   500
+*    yfx   400
+/    yfx   400
+//   yfx   400
+>>   yfx   400
+<<   yfx   400
+**   xfx   200
+^    xfy   200
+\\    fx   200
+-     fy   200
+
+mod  yfx   400
+div  yfx   300
+rem  yfx   300
+sin   fx   200
+cos   fx   200
+sqrt  fx   200
+atan  fx   200
+exp   fx   200
+log   fx   200
+
+ */

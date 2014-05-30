@@ -24,14 +24,8 @@ public class PrologClauseImpl extends ASTWrapperPsiElement implements PrologClau
 
   @Override
   @NotNull
-  public List<PrologBodypredicate> getBodypredicateList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrologBodypredicate.class);
-  }
-
-  @Override
-  @NotNull
-  public PrologPredicate getPredicate() {
-    return findNotNullChildByClass(PrologPredicate.class);
+  public List<PrologTerm> getTermList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrologTerm.class);
   }
 
 }

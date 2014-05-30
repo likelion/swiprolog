@@ -7,47 +7,19 @@ import com.intellij.psi.PsiElement;
 
 public class PrologVisitor extends PsiElementVisitor {
 
-  public void visitArg(@NotNull PrologArg o) {
-    visitPsiElement(o);
-  }
-
-  public void visitArglist(@NotNull PrologArglist o) {
-    visitPsiElement(o);
-  }
-
-  public void visitBodypredicate(@NotNull PrologBodypredicate o) {
-    visitPsiElement(o);
-  }
-
   public void visitClause(@NotNull PrologClause o) {
     visitPsiElement(o);
   }
 
-  public void visitElement(@NotNull PrologElement o) {
+  public void visitDirective(@NotNull PrologDirective o) {
     visitPsiElement(o);
   }
 
-  public void visitElementlist(@NotNull PrologElementlist o) {
+  public void visitQuery(@NotNull PrologQuery o) {
     visitPsiElement(o);
   }
 
-  public void visitFact(@NotNull PrologFact o) {
-    visitPsiElement(o);
-  }
-
-  public void visitInstruction(@NotNull PrologInstruction o) {
-    visitPsiElement(o);
-  }
-
-  public void visitList(@NotNull PrologList o) {
-    visitPsiElement(o);
-  }
-
-  public void visitLiteral(@NotNull PrologLiteral o) {
-    visitPsiElement(o);
-  }
-
-  public void visitPredicate(@NotNull PrologPredicate o) {
+  public void visitTerm(@NotNull PrologTerm o) {
     visitPsiElement(o);
   }
 

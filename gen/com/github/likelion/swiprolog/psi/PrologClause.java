@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface PrologClause extends PsiElement {
 
   @NotNull
-  List<PrologBodypredicate> getBodypredicateList();
-
-  @NotNull
-  PrologPredicate getPredicate();
+  List<PrologTerm> getTermList();
 
 }
